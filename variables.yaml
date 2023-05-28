@@ -1,2 +1,7 @@
 domains:
   hubble: hubble-ui.k8s.owlish.cloud
+  argocd: argocd.k8s.owlish.cloud
+
+repository:
+  url: https://github.com/devOwlish/home-lab.git
+  branch: init

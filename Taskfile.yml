@@ -5,7 +5,7 @@ vars:
   kindConfig: kind.yaml
   ciliumVersion: 1.13.1
   ingressNginxVersion: 4.6.1
-
+  argoVersion: 5.34.5
 
 tasks:
   run:
@@ -35,10 +35,25 @@ tasks:
     # silent: true
     desc: Bootstraps the cluster with Cilium and Ingress Nginx
     cmds:
-      - gomplate --input-dir templates/ --output-dir out/
-      - helm repo add cilium https://helm.cilium.io/
-      - helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-      - helm repo update
-      - helm install cilium cilium/cilium --version {{ .ciliumVersion }} -f ./out/bootstrap/values/cilium.yaml --namespace=kube-system
-      - helm install ingress-nginx ingress-nginx/ingress-nginx --version {{ .ingressNginxVersion }} -f ./out/bootstrap/values/ingress-nginx.yaml --namespace ingress-nginx --create-namespace
+      - gomplate --input-dir templates/bootstrap --output-dir out/
+      # - helm repo add cilium https://helm.cilium.io/
+      # - helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+      # - helm repo add argo https://argoproj.github.io/argo-helm
+      # - helm repo update
+      # - >
+      #   helm install cilium cilium/cilium
+      #   --version {{ .ciliumVersion }}
+      #   -f ./out/values/cilium.yaml
+      #   --namespace=kube-system
+      # - >
+      #   helm install ingress-nginx ingress-nginx/ingress-nginx
+      #   --version {{ .ingressNginxVersion }}
+      #   -f ./out/values/ingress-nginx.yaml
+      #   --namespace ingress-nginx --create-namespace
+      - >
+        helm install argo argo/argo-cd
+        --version {{ .argoVersion }}
+        -f ./out/values/argocd.yaml
+        --namespace argocd
+        --create-namespace
       - rm -rf ./out

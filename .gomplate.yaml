@@ -1,3 +1,7 @@
+# To not confict with the Helm chart delimeters, we use << and >> instead of {{ and }}
+leftDelim: '<<'
+rightDelim: '>>'
+
 context:
   .:
     url: variables.yaml

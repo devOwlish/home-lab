@@ -1,4 +1,6 @@
 configs:
+  cm:
+    timeout.reconciliation: 30s
   secret:
     # admin
     argocdServerAdminPassword: "$2a$10$p7bNbfp4fkash35ZZmoM5.mYrpcQljU.Keu/vkXhtMCjzDzpETkcm"

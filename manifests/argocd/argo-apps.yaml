@@ -14,6 +14,8 @@ spec:
   template:
     metadata:
       name: '{{ path.basename }}'
+      labels:
+        parent-appset: argocd-apps
     spec:
       ## argocd-apps/>infra</argo-cd
       project: '{{ path[1] }}'

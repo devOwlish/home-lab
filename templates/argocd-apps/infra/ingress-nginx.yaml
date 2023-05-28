@@ -6,13 +6,15 @@ metadata:
   namespace: argocd
 spec:
   project: infra
-  source:
-    chart: ingress-nginx
-    repoURL: https://kubernetes.github.io/ingress-nginx
-    targetRevision: 4.6.1
-    helm:
-      valueFiles:
-        - manifests/ingress-nginx/values.yaml
+  sources:
+    - chart: ingress-nginx
+      repoURL: https://kubernetes.github.io/ingress-nginx
+      targetRevision: 4.6.1
+      helm:
+        valueFiles:
+          - $values/manifests/ingress-nginx/values.yaml
+    - repoURL: << .repository.url >>
+      ref: << .repository.branch >>
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx

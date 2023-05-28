@@ -1,4 +1,5 @@
-# To not confict with the Helm chart delimeters, we use << and >> instead of {{ and }}
+# To not confict with other tools that use go-template (like helm, ArgoCD AppSet, etc.)
+# Let's use << and >> instead of {{ and }}
 leftDelim: '<<'
 rightDelim: '>>'
 

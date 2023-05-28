@@ -1,0 +1,35 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: argocd-apps
+  namespace: argocd
+spec:
+  generators:
+  - git:
+      repoURL: https://github.com/devOwlish/home-lab.git
+      revision: init
+      directories:
+      - path: argocd-apps/*
+  template:
+    metadata:
+      name: '{{ path.basename }}'
+    spec:
+      ## argocd-apps/>infra</argo-cd
+      project: '{{ path[1] }}'
+      source:
+        repoURL: https://github.com/devOwlish/home-lab.git
+        targetRevision: init
+        path: '{{ path }}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ path.basename }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: true
+        syncOptions:
+        - Validate=true
+        - CreateNamespace=true
+        - PruneLast=true

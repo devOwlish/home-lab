@@ -1,0 +1,31 @@
+# We don't have a kube-proxy installed, so no k8s apiserver service is present
+# and client-go can't connect to KUBERNETES_SERVICE_HOST=10.96.0.1, thus all cilium pods are never ready.
+# But cilium pods run with hostNetwork: true, so we can access the apiserver via CRI networking via container name and port
+kubeProxyReplacement: strict
+k8sServiceHost: kind-control-plane
+k8sServicePort: 6443
+#
+nodePort:
+  enabled: true
+hostPort:
+  enabled: true
+bpf:
+  masquerade: false
+image:
+  pullPolicy: IfNotPresent
+ipam:
+  mode: kubernetes
+hubble:
+  enabled: true
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+    baseUrl: "/"
+    standalone:
+        enabled: true
+    ingress:
+      enabled: true
+      className: nginx
+      hosts:
+        - {{ .domains.hubble }}

@@ -1,0 +1,14 @@
+controller:
+  # Enable hostPort to let us port-forward 80 and 443 ports
+  hostPort:
+    enabled: true
+  # We don't need any services because of the hostPort
+  service:
+    enabled: false
+  # Schedule ingress controller to the control-plane node
+  nodeSelector:
+    host-ingress: "true"
+  tolerations:
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Equal"
+      effect: "NoSchedule"

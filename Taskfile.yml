@@ -55,7 +55,7 @@ tasks:
         -f ./out/values/cilium.yaml
         --namespace=kube-system
       - >
-        helm install argo argo/argo-cd
+        helm install argocd-base argo/argo-cd
         --version {{ .argoVersion }}
         -f ./out/values/argocd-base.yaml
         --namespace argocd

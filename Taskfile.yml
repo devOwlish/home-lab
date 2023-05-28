@@ -30,6 +30,12 @@ tasks:
     cmds:
       - kind delete cluster
 
+  generate-apps:
+    desc: Generate the ArgoCD apps manifests
+    silent: true
+    cmds:
+      - gomplate --input-dir templates/argocd-apps --output-dir argocd-apps/
+
   bootstrap:
     # internal: true
     # silent: true

@@ -4,7 +4,6 @@ version: '3'
 vars:
   kindConfig: kind.yaml
   ciliumVersion: 1.13.1
-  ingressNginxVersion: 4.6.1
   argoVersion: 5.34.5
 
 tasks:
@@ -48,7 +47,6 @@ tasks:
     cmds:
       - task: template
       - helm repo add cilium https://helm.cilium.io/
-      - helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
       - helm repo add argo https://argoproj.github.io/argo-helm
       - helm repo update
       - >
@@ -56,11 +54,6 @@ tasks:
         --version {{ .ciliumVersion }}
         -f ./out/values/cilium.yaml
         --namespace=kube-system
-      # - >
-      #   helm install ingress-nginx ingress-nginx/ingress-nginx
-      #   --version {{ .ingressNginxVersion }}
-      #   -f ./out/values/ingress-nginx.yaml
-      #   --namespace ingress-nginx --create-namespace
       - >
         helm install argo argo/argo-cd
         --version {{ .argoVersion }}

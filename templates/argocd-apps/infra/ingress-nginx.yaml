@@ -14,7 +14,8 @@ spec:
         valueFiles:
           - $values/manifests/ingress-nginx/values.yaml
     - repoURL: << .repository.url >>
-      ref: << .repository.branch >>
+      targetRevision: << .repository.branch >>
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx

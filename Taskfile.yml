@@ -67,4 +67,5 @@ tasks:
         -f ./out/values/argocd-base.yaml
         --namespace argocd
         --create-namespace
+      - apply -k ./manifests/argocd
       - rm -rf ./out

@@ -13,23 +13,23 @@ spec:
       - path: argocd-apps/*
   template:
     metadata:
-      name: '{{`{{ path.basename }}`}}'
+      name: '{{ path.basename }}'
     spec:
       ## argocd-apps/>infra</argo-cd
-      project: '{{`{{ path[1] }}`}}'
+      project: '{{ path[1] }}'
       source:
         repoURL: << .repository.url >>
         targetRevision: << .repository.branch >>
-        path: '{{`{{ path }}`}}'
+        path: '{{ path }}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{`{{ path.basename }}`}}'
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-        allowEmpty: true
-      syncOptions:
-      - Validate=true
-      - CreateNamespace=true
-      - PruneLast=true
+        namespace: '{{ path.basename }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: true
+        syncOptions:
+        - Validate=true
+        - CreateNamespace=true
+        - PruneLast=true

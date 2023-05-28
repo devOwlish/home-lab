@@ -15,7 +15,7 @@ extraObjects:
       name: infra
       namespace: argocd
     spec:
-      description: Infrastructure tools
+      description: Infrastructure components
       sourceRepos:
       - '*'
       clusterResourceWhitelist:
@@ -41,20 +41,26 @@ extraObjects:
           - path: argocd-apps/*
       template:
         metadata:
-          name: '{{ path.basename }}'
+          name: '{{`{{ path.basename }}`}}'
         spec:
           ## argocd-apps/>infra</argo-cd
-          project: '{{ path[2] }}'
+          project: '{{`{{ path[1] }}`}}'
           source:
             repoURL: << .repository.url >>
-            targetRevision: HEAD
-            path: '{{ path }}'
+            targetRevision: << .repository.branch >>
+            path: '{{`{{ path }}`}}'
           destination:
             server: https://kubernetes.default.svc
-            namespace: '{{ path.basename }}'
-          syncPolicy:
-            syncOptions:
-            - CreateNamespace=true
+            namespace: '{{`{{ path.basename }}`}}'
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
+            allowEmpty: true
+          syncOptions:
+          - Validate=true
+          - CreateNamespace=true
+          - PruneLast=true
 
 server:
   ingress:

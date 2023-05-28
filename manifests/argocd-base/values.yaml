@@ -1,0 +1,73 @@
+configs:
+  secret:
+    # admin
+    argocdServerAdminPassword: "$2a$10$p7bNbfp4fkash35ZZmoM5.mYrpcQljU.Keu/vkXhtMCjzDzpETkcm"
+
+crds:
+  install: false
+  keep: false
+
+# -- Array of extra K8s manifests to deploy
+extraObjects:
+  - apiVersion: argoproj.io/v1alpha1
+    kind: AppProject
+    metadata:
+      name: infra
+      namespace: argocd
+    spec:
+      description: Infrastructure components
+      sourceRepos:
+      - '*'
+      clusterResourceWhitelist:
+      - group: '*'
+        kind: '*'
+      destinations:
+      - namespace: '*'
+        server: https://kubernetes.default.svc
+      orphanedResources:
+        warn: false
+
+  - apiVersion: argoproj.io/v1alpha1
+    kind: ApplicationSet
+    metadata:
+      name: argocd-apps
+      namespace: argocd
+    spec:
+      generators:
+      - git:
+          repoURL: https://github.com/devOwlish/home-lab.git
+          revision: init
+          directories:
+          - path: argocd-apps/*
+      template:
+        metadata:
+          name: '{{`{{ path.basename }}`}}'
+        spec:
+          ## argocd-apps/>infra</argo-cd
+          project: '{{`{{ path[1] }}`}}'
+          source:
+            repoURL: https://github.com/devOwlish/home-lab.git
+            targetRevision: init
+            path: '{{`{{ path }}`}}'
+          destination:
+            server: https://kubernetes.default.svc
+            namespace: '{{`{{ path.basename }}`}}'
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
+            allowEmpty: true
+          syncOptions:
+          - Validate=true
+          - CreateNamespace=true
+          - PruneLast=true
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    annotations:
+      ingress.kubernetes.io/ssl-redirect: "false"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    hosts:
+      - argocd.k8s.owlish.cloud

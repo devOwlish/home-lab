@@ -10,7 +10,6 @@ vars:
 tasks:
   run:
     desc: Create a kind cluster from the config file
-    silent: true
     preconditions:
       - sh: which kind
         msg: "kind is not installed. Please install it from https://kind.sigs.k8s.io/docs/user/quick-start/#installation"
@@ -25,41 +24,47 @@ tasks:
       - task: bootstrap
 
   stop:
-    silent: true
     desc: Stop the kind cluster
     cmds:
       - kind delete cluster
 
-  generate-apps:
-    desc: Generate the ArgoCD apps manifests
-    silent: true
+  cleanup:
+    desc: Cleanup templated directories
     cmds:
+      - rm -rf {argocd-apps,manifests,out} || true
+
+  template:
+    desc: Generate the ArgoCD apps manifests
+    cmds:
+      - task: cleanup
+      - gomplate --input-dir templates/bootstrap --output-dir out/
       - gomplate --input-dir templates/argocd-apps --output-dir argocd-apps/
+      - gomplate --input-dir templates/manifests --output-dir manifests/
+      - ls -1 out/values | cut -d '.' -f1 | xargs -I {} sh -c 'mkdir -p manifests/{} && cp out/values/{}.yaml manifests/{}/values.yaml'
 
   bootstrap:
     # internal: true
-    # silent: true
     desc: Bootstraps the cluster with Cilium and Ingress Nginx
     cmds:
-      - gomplate --input-dir templates/bootstrap --output-dir out/
-      # - helm repo add cilium https://helm.cilium.io/
-      # - helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-      # - helm repo add argo https://argoproj.github.io/argo-helm
-      # - helm repo update
-      # - >
-      #   helm install cilium cilium/cilium
-      #   --version {{ .ciliumVersion }}
-      #   -f ./out/values/cilium.yaml
-      #   --namespace=kube-system
-      # - >
-      #   helm install ingress-nginx ingress-nginx/ingress-nginx
-      #   --version {{ .ingressNginxVersion }}
-      #   -f ./out/values/ingress-nginx.yaml
-      #   --namespace ingress-nginx --create-namespace
+      - task: template
+      - helm repo add cilium https://helm.cilium.io/
+      - helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+      - helm repo add argo https://argoproj.github.io/argo-helm
+      - helm repo update
+      - >
+        helm install cilium cilium/cilium
+        --version {{ .ciliumVersion }}
+        -f ./out/values/cilium.yaml
+        --namespace=kube-system
+      - >
+        helm install ingress-nginx ingress-nginx/ingress-nginx
+        --version {{ .ingressNginxVersion }}
+        -f ./out/values/ingress-nginx.yaml
+        --namespace ingress-nginx --create-namespace
       - >
         helm install argo argo/argo-cd
         --version {{ .argoVersion }}
-        -f ./out/values/argocd.yaml
+        -f ./out/values/argocd-base.yaml
         --namespace argocd
         --create-namespace
       - rm -rf ./out

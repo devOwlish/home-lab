@@ -11,19 +11,8 @@ spec:
     repoURL: https://kubernetes.github.io/ingress-nginx
     targetRevision: 4.6.1
     helm:
-      values: |
-        controller:
-        # Enable hostPort to let us port-forward 80 and 443 ports
-          hostPort:
-            enabled: true
-          service:
-            enabled: false
-          nodeSelector:
-            host-ingress: "true"
-          tolerations:
-            - key: "node-role.kubernetes.io/control-plane"
-              operator: "Equal"
-              effect: "NoSchedule"
+      valueFiles:
+        - ingress-nginx/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx

@@ -56,16 +56,16 @@ tasks:
         --version {{ .ciliumVersion }}
         -f ./out/values/cilium.yaml
         --namespace=kube-system
-      - >
-        helm install ingress-nginx ingress-nginx/ingress-nginx
-        --version {{ .ingressNginxVersion }}
-        -f ./out/values/ingress-nginx.yaml
-        --namespace ingress-nginx --create-namespace
+      # - >
+      #   helm install ingress-nginx ingress-nginx/ingress-nginx
+      #   --version {{ .ingressNginxVersion }}
+      #   -f ./out/values/ingress-nginx.yaml
+      #   --namespace ingress-nginx --create-namespace
       - >
         helm install argo argo/argo-cd
         --version {{ .argoVersion }}
         -f ./out/values/argocd-base.yaml
         --namespace argocd
         --create-namespace
-      - apply -k ./manifests/argocd
+      - kubectl apply -k ./manifests/argocd
       - rm -rf ./out

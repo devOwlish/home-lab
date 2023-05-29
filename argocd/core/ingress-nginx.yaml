@@ -5,7 +5,7 @@ metadata:
   name: ingress-nginx
   namespace: argocd
 spec:
-  project: infra
+  project: core
   # https://argo-cd.readthedocs.io/en/stable/user-guide/multiple_sources/
   sources:
     - chart: ingress-nginx

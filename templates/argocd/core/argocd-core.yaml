@@ -5,11 +5,11 @@ metadata:
   name: argocd-core
   namespace: argocd
 spec:
-  project: infra
+  project: core
   source:
-    - path: apps/core/argocd-core
-      repoURL: << .repository.url >>
-      targetRevision: << .repository.branch >>
+    path: apps/core/argocd-core
+    repoURL: << .repository.url >>
+    targetRevision: << .repository.branch >>
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

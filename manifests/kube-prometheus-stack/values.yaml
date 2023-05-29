@@ -1,0 +1,35 @@
+
+grafana:
+  enabled: true
+  adminPassword: admin
+
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/ssl-redirect: "true"
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - grafana.k8s.owlish.cloud
+    # tls:
+    #   - hosts:
+    #     - grafana.k8s.owlish.cloud
+
+prometheus:
+  prometheusSpec:
+    podMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/ssl-redirect: "true"
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - prometheus.k8s.owlish.cloud
+    # tls:
+    #   - hosts:
+    #     - prom.k8s.owlish.cloud
+
+kube-state-metrics:
+  selfMonitor:
+    enabled: true
+

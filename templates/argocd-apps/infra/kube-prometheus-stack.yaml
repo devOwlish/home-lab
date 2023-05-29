@@ -1,0 +1,32 @@
+<< if .addons.kubePrometheusStack.enabled >>
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  name: kube-prometheus-stack
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+    - chart: kube-prometheus-stack
+      repoURL: https://prometheus-community.github.io/helm-charts
+      targetRevision: << .addons.kubePrometheusStack.version >>
+      helm:
+        valueFiles:
+          - $values/manifests/kube-prometheus-stack/values.yaml
+    - repoURL: << .repository.url >>
+      targetRevision: << .repository.branch >>
+      ref: values
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+    - ServerSideApply=true
+    - CreateNamespace=true
+<< end >>

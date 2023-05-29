@@ -9,7 +9,7 @@ grafana:
       ingress.kubernetes.io/ssl-redirect: "true"
       kubernetes.io/ingress.class: nginx
     hosts:
-      - << .domains.grafana >>
+      - << .addons.kubePrometheusStack.domains.grafana >>
     # tls:
     #   - hosts:
     #     - grafana.k8s.owlish.cloud
@@ -24,7 +24,7 @@ prometheus:
       ingress.kubernetes.io/ssl-redirect: "true"
       kubernetes.io/ingress.class: nginx
     hosts:
-      - << .domains.prometheus >>
+      - << .addons.kubePrometheusStack.domains.prometheus >>
     # tls:
     #   - hosts:
     #     - prom.k8s.owlish.cloud

@@ -3,8 +3,6 @@ version: '3'
 
 vars:
   kindConfig: kind.yaml
-  ciliumVersion: 1.13.1
-  argoVersion: 5.34.5
 
 tasks:
   run:
@@ -18,6 +16,8 @@ tasks:
         msg: "kubectl is not installed. Please install it from https://kubernetes.io/docs/tasks/tools/install-kubectl/"
       - sh: which gomplate
         msg: "gomplate is not installed. Please install it from https://docs.gomplate.ca/installing/"
+      - sh: which yq
+        msg: "yq is not installed. Please install it from https://mikefarah.gitbook.io/yq/#install"
     cmds:
       - kind create cluster --config={{ .kindConfig }}
       - task: bootstrap
@@ -49,12 +49,12 @@ tasks:
       - helm repo update
       - >
         helm install cilium cilium/cilium
-        --version {{ .ciliumVersion }}
+        --version $(yq -r < variables.yaml .versions.cilium)
         -f ./apps/core/values/cilium.yaml
         --namespace=kube-system
       - >
-        helm install argocd-base argo/argo-cd
-        --version {{ .argoVersion }}
+        helm install argocd argo/argo-cd
+        --version $(yq -r < variables.yaml .versions.argocd)
         -f ./apps/core/values/argocd.yaml
         --namespace argocd
         --create-namespace

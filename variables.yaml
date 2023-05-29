@@ -1,8 +1,11 @@
 domains:
   hubble: hubble-ui.k8s.owlish.cloud
   argocd: argocd.k8s.owlish.cloud
-  grafana: grafana.k8s.owlish.cloud
-  prometheus: prometheus.k8s.owlish.cloud
+
+versions:
+  cilium: 1.13.1
+  argocd: 5.34.5
+  ingressNginx: 4.6.1
 
 repository:
   url: https://github.com/devOwlish/home-lab.git
@@ -12,3 +15,6 @@ addons:
   kubePrometheusStack:
     enabled: true
     version: 46.4.1
+    domains:
+      grafana: grafana.k8s.owlish.cloud
+      prometheus: prometheus.k8s.owlish.cloud

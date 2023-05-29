@@ -2,10 +2,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: infra
+  name: core
   namespace: argocd
 spec:
-  description: Infrastructure components
+  description: Core components
   sourceRepos:
   - '*'
   clusterResourceWhitelist:

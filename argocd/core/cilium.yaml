@@ -2,27 +2,28 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-base
+  name: cilium
   namespace: argocd
 spec:
   project: infra
   # https://argo-cd.readthedocs.io/en/stable/user-guide/multiple_sources/
   sources:
-    - chart: argo-cd
-      repoURL: https://argoproj.github.io/argo-helm
-      targetRevision: 5.34.5
+    - chart: cilium
+      repoURL: https://helm.cilium.io/
+      targetRevision: 1.13.1
       helm:
         valueFiles:
-          - $values/manifests/argocd-base/values.yaml
-    - repoURL: << .repository.url >>
-      targetRevision: << .repository.branch >>
+          - $values/apps/core/values/cilium.yaml
+    - repoURL: https://github.com/devOwlish/home-lab.git
+      targetRevision: init
       ref: values
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: kube-system
   syncPolicy:
     automated:
-      prune: true
+      # We don't want to prune the CNI
+      prune: false
       selfHeal: true
       allowEmpty: true
     syncOptions:

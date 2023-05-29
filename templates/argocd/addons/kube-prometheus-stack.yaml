@@ -17,7 +17,7 @@ spec:
       targetRevision: << .addons.kubePrometheusStack.version >>
       helm:
         valueFiles:
-          - $values/manifests/kube-prometheus-stack/values.yaml
+          - $values/apps/addons/values/kube-prometheus-stack.yaml
     - repoURL: << .repository.url >>
       targetRevision: << .repository.branch >>
       ref: values

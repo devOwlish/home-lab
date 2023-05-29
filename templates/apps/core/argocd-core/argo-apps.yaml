@@ -10,14 +10,14 @@ spec:
       repoURL: << .repository.url >>
       revision: << .repository.branch >>
       directories:
-      - path: argocd-apps/*
+      - path: argocd/*
   template:
     metadata:
       name: '{{ path.basename }}'
       labels:
         parent-appset: argocd-apps
     spec:
-      ## argocd-apps/>infra</argo-cd
+      ## argocd/>infra</argo-cd
       project: '{{ path[1] }}'
       source:
         repoURL: << .repository.url >>

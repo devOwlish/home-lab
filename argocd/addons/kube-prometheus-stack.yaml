@@ -17,7 +17,7 @@ spec:
       targetRevision: 46.4.1
       helm:
         valueFiles:
-          - $values/manifests/kube-prometheus-stack/values.yaml
+          - $values/apps/addons/values/kube-prometheus-stack.yaml
     - repoURL: https://github.com/devOwlish/home-lab.git
       targetRevision: init
       ref: values

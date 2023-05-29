@@ -30,16 +30,14 @@ tasks:
   cleanup:
     desc: Cleanup templated directories
     cmds:
-      - rm -rf {argocd-apps,manifests,out} || true
+      - rm -rf {argocd,apps} || true
 
   template:
     desc: Generate the ArgoCD apps manifests
     cmds:
       - task: cleanup
-      - gomplate --input-dir templates/bootstrap --output-dir out/
-      - gomplate --input-dir templates/argocd-apps --output-dir argocd-apps/
-      - gomplate --input-dir templates/manifests --output-dir manifests/
-      - ls -1 out/values | cut -d '.' -f1 | xargs -I {} sh -c 'mkdir -p manifests/{} && cp out/values/{}.yaml manifests/{}/values.yaml'
+      - gomplate --input-dir templates/argocd --output-dir argocd/
+      - gomplate --input-dir templates/apps --output-dir apps/
 
   bootstrap:
     # internal: true
@@ -52,13 +50,12 @@ tasks:
       - >
         helm install cilium cilium/cilium
         --version {{ .ciliumVersion }}
-        -f ./out/values/cilium.yaml
+        -f ./apps/core/values/cilium.yaml
         --namespace=kube-system
       - >
         helm install argocd-base argo/argo-cd
         --version {{ .argoVersion }}
-        -f ./out/values/argocd-base.yaml
+        -f ./apps/core/values/argocd.yaml
         --namespace argocd
         --create-namespace
-      - kubectl apply -k ./manifests/argocd
-      - rm -rf ./out
+      - kubectl apply -k ./apps/core/argocd-core

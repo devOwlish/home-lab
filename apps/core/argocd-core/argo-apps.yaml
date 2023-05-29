@@ -10,14 +10,14 @@ spec:
       repoURL: https://github.com/devOwlish/home-lab.git
       revision: init
       directories:
-      - path: argocd-apps/*
+      - path: argocd/*
   template:
     metadata:
       name: '{{ path.basename }}'
       labels:
         parent-appset: argocd-apps
     spec:
-      ## argocd-apps/>infra</argo-cd
+      ## argocd/>infra</argo-cd
       project: '{{ path[1] }}'
       source:
         repoURL: https://github.com/devOwlish/home-lab.git

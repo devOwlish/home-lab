@@ -16,3 +16,22 @@ spec:
     server: https://kubernetes.default.svc
   orphanedResources:
     warn: false
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: addons
+  namespace: argocd
+spec:
+  description: Cluster addons
+  sourceRepos:
+  - '*'
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  destinations:
+  - namespace: '*'
+    server: https://kubernetes.default.svc
+  orphanedResources:
+    warn: false

@@ -2,27 +2,28 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ingress-nginx
+  name: cilium
   namespace: argocd
 spec:
   project: infra
   # https://argo-cd.readthedocs.io/en/stable/user-guide/multiple_sources/
   sources:
-    - chart: ingress-nginx
-      repoURL: https://kubernetes.github.io/ingress-nginx
-      targetRevision: 4.6.1
+    - chart: cilium
+      repoURL: https://helm.cilium.io/
+      targetRevision: 1.13.1
       helm:
         valueFiles:
-          - $values/manifests/ingress-nginx/values.yaml
-    - repoURL: https://github.com/devOwlish/home-lab.git
-      targetRevision: init
+          - $values/apps/core/values/cilium.yaml
+    - repoURL: << .repository.url >>
+      targetRevision: << .repository.branch >>
       ref: values
   destination:
     server: https://kubernetes.default.svc
-    namespace: ingress-nginx
+    namespace: kube-system
   syncPolicy:
     automated:
-      prune: true
+      # We don't want to prune the CNI
+      prune: false
       selfHeal: true
       allowEmpty: true
     syncOptions:
